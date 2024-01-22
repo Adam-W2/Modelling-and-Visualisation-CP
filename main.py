@@ -29,20 +29,14 @@ for n in range(nsteps):
             jtrial = np.random.randint(0,Y)
             spin_new = -spins[itrial,jtrial]
 
-            left = (itrial - 1) + 1
-            right = (itrial + 1) + 1
-            top = (jtrial - 1) + 1
-            bot = (jtrial + 1) + 1
-
-            #ghost_array = np.pad(spins,(1,1),"wrap")
             Edelta = -2 * spin_new * (spins[(itrial + 1) % X][jtrial] + spins[(itrial - 1) % X][jtrial] +
-                                 spins[itrial][(jtrial + 1) % X] + spins[itrial][(jtrial - 1) % X])
+                                      spins[itrial][(jtrial + 1) % X] + spins[itrial][(jtrial - 1) % X])
 
             r = random.random()
             if r <= np.exp(-Edelta/kT):
                 spins[itrial,jtrial] = spin_new
 
-    if n % 10 == 0:
+    if n % 5 == 0:
         #update measurements
         #dump output (e.g., for gnuplot)
         """""
@@ -54,14 +48,7 @@ for n in range(nsteps):
         """""
         #show animation
         plt.cla()
-        im = plt.imshow(spins, animated=True)
+        im = plt.imshow(spins, animated=True,vmin =-1,vmax=1)
         plt.draw()
-        plt.pause(0.0001)
-
-
-
-
-
-
-
-
+        plt.pause(0.00001)
+#start temp 1, for glauber all up or down, start random is okay but get stripe. The you have to wait to get rid of sttripe. Start all up or down to calculate temp
