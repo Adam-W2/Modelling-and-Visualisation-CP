@@ -128,8 +128,8 @@ def run_dynamics(nsteps,X,D,kT,spins):
         M2list = []
         for n in range(nsteps):
             Kawasaki(X,Y,kT,spins)
-            if n % 10 == 0:
-                E,M= measure(X,Y,spins)
+            if n % 10 == 0 and n > 100:
+                E,M = measure(X,Y,spins)
                 Elist.append(E)
                 E2list.append(E**2)
                 Mlist.append(M)
