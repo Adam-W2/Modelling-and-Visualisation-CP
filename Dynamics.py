@@ -57,9 +57,6 @@ def Glauber(X,Y,kT,spins):
 def measure(X,Y,spins):
     E = 0
     M = 0
-    E2 = 0
-    modM = 0
-    M2 = 0
     for i in range(X):
         for j in range(Y):
             E += -1/2 * spins[i][j] * (spins[(i + 1) % X][j] + spins[(i - 1) % X][j] + spins[i][(j + 1) % X] +
@@ -69,12 +66,55 @@ def measure(X,Y,spins):
     return E,M
 
 
-def calc_ob(X,kT,E,M,E2,M2):
+def calc_c(X,kT,E,E2):
     c = (E2-np.power(E,2))/(np.power(X,2) * np.power(kT,2))
+    return c
+
+def calc_x(X,kT,M,M2):
     x = (M2-np.power(M,2))/(np.power(X,2) * kT)
-    return c,x
+    return x
 
+def bootstrap(L,func,X,kT):
+    masterlist = []
 
+    for n in range(1000):
+        sidelist1 = []
+        sidelist2 = []
+
+        for i in range(len(L)):
+            val = L[np.random.randint(0,len(L))]
+            val2 = val ** 2
+            sidelist1.append(val)
+            sidelist2.append(val2)
+
+        A = sum(sidelist1)/len(sidelist1)
+        B = sum(sidelist2)/len(sidelist2)
+        masterlist.append(func(X,kT,A,B))
+
+    masterlist2 = [n**2 for n in masterlist]
+    c = sum(masterlist)/len(masterlist)
+    c2 = sum(masterlist2)/len(masterlist2)
+
+    error = np.sqrt(c2-c**2)
+    return error
+
+def jacknife(L,func,X,kT):
+    masterlist = []
+    for i in range(len(L)):
+        m = L[:]
+        m.remove(L[i])
+
+        m2 = [n **2 for n in m]
+        A = sum(m)/len(m)
+        B = sum(m2)/len(m2)
+        masterlist.append(func(X,kT,A,B))
+
+    masterlist2 = [n**2 for n in masterlist]
+    c = sum(masterlist)/len(masterlist)
+    c2 = sum(masterlist2)/len(masterlist2)
+
+    error = np.sqrt(c2-c**2) * np.sqrt(len(L))
+    return error
 def run_dynamics(nsteps,X,D,kT,spins):
     Y = X
 
@@ -94,56 +134,39 @@ def run_dynamics(nsteps,X,D,kT,spins):
                 modMlist.append(np.absolute(M))
                 M2list.append(M**2)
 
-                #update measurements
-                #dump output (e.g., for gnuplot)
-                """""
-                f = open('spins.dat', 'w')
-                for i in range(X):
-                    for j in range(Y):
-                        f.write('%d %d %lf\n' % (i, j, spins[i, j]))
-                f.close()
-                """""
                 #show animation
-                plt.cla()
-                im = plt.imshow(spins, animated=True,vmin =-1,vmax=1)
-                plt.draw()
-                plt.pause(0.00001)
+                #plt.cla()
+                #im = plt.imshow(spins, animated=True,vmin =-1,vmax=1)
+                #plt.draw()
+                #plt.pause(0.00001)
 
         avE = sum(Elist)/len(Elist)
         avE2 = sum(E2list)/len(E2list)
         avM = sum(Mlist)/len(Mlist)
         avmodM = sum(modMlist)/len(modMlist)
         avM2 = sum(M2list)/len(M2list)
-        c,x = calc_ob(X,kT,avE,avM,avE2,avM2)
+        c = calc_c(X,kT,avE,avE2)
+        x = calc_x(X,kT,avM,avM2)
+        error_c_boot = bootstrap(Elist,calc_c,X,kT)
+        error_m_boot = bootstrap(Mlist,calc_x,X,kT)
+        error_c_jack = jacknife(Elist,calc_c,X,kT)
+        error_m_jack = jacknife(Mlist,calc_x,X,kT)
 
-        return avE,avM,avmodM,c,x
+        return [avE,avM,avmodM,c,x,error_c_boot,error_m_boot,error_c_jack,error_m_jack]
 
 
 
     elif D == "K":
         Elist = []
-        Mlist = []
         E2list = []
-        modMlist = []
-        M2list = []
+
         for n in range(nsteps):
             Kawasaki(X,Y,kT,spins)
             if n % 10 == 0 and n > 100:
                 E,M = measure(X,Y,spins)
                 Elist.append(E)
                 E2list.append(E**2)
-                Mlist.append(M)
-                modMlist.append(np.absolute(M))
-                M2list.append(M**2)
                 #update measurements
-                #dump output (e.g., for gnuplot)
-                """""
-                f = open('spins.dat', 'w')
-                for i in range(X):
-                    for j in range(Y):
-                        f.write('%d %d %lf\n' % (i, j, spins[i, j]))
-                f.close()
-                """""
                 #show animation
                 plt.cla()
                 im = plt.imshow(spins, animated=True,vmin =-1,vmax=1)
@@ -152,12 +175,12 @@ def run_dynamics(nsteps,X,D,kT,spins):
 
         avE = sum(Elist) / len(Elist)
         avE2 = sum(E2list) / len(E2list)
-        avM = sum(Mlist) / len(Mlist)
-        avmodM = sum(modMlist) / len(modMlist)
-        avM2 = sum(M2list) / len(M2list)
-        c,x = calc_ob(X,kT,avE,avM,avE2,avM2)
+        c = calc_c(X,kT,avE,avE2)
+        error_c_boot = bootstrap(Elist,calc_c,X,kT)
+        error_c_jack = jacknife(Elist,calc_c,X,kT)
 
-        return avE,avM,avmodM,c,x
+        return [avE,c,error_c_boot,error_c_jack]
+
     else:
         print("Incorrect dynamics given, check your spelling?")
 

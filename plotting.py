@@ -2,7 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 
-df = pd.read_csv("Simulation_Data")
+df = pd.read_csv("Simulation_Data_Glauber")
 df.drop("Unnamed: 0", axis = 1, inplace= True)
 print(df.head())
 T = np.linspace(1,3,20)
