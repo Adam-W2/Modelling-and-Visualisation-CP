@@ -14,10 +14,10 @@ def Kawasaki(X,Y,kT,spins):
     for i in range(X):
         for j in range(Y):
             #pick two random points
-            itrial1 = random.randint(0,X-1)
-            jtrial1 = random.randint(0,Y-1)
-            itrial2 = random.randint(0,X-1)
-            jtrial2 = random.randint(0,Y-1)
+            itrial1 = np.random.randint(0,X)
+            jtrial1 = np.random.randint(0,Y)
+            itrial2 = np.random.randint(0,X)
+            jtrial2 = np.random.randint(0,Y)
 
             spin1 = spins[itrial1][jtrial1]
             spin2 = spins[itrial2][jtrial2]
@@ -57,8 +57,8 @@ def Glauber(X,Y,kT,spins):
     for i in range(X):
         for j in range(Y):
             #Pick random point
-            itrial = random.randint(0,X-1)
-            jtrial = random.randint(0,Y-1)
+            itrial = np.random.randint(0,X)
+            jtrial = np.random.randint(0,Y)
 
             #Flip point spin
             spin_new = -spins[itrial,jtrial]
@@ -132,23 +132,30 @@ def bootstrap(L,func,X,kT):
     return error
 
 def jacknife(L,func,X,kT):
-    masterlist = []
+    n = len(L)
+    jacknife_estimate = np.zeros(n)
+
     #Loop over length of input list
-    for i in range(len(L)):
+    for i in range(n):
         #Create new list and remove ith component
-        m = L[:]
-        m.remove(L[i])
+        sample = np.delete(L,i)
+        #m.remove(L[i])
 
         #Create squared version list and calculate specific heat, appending to masterlist
-        m2 = [n **2 for n in m]
-        A = sum(m)/len(m)
-        B = sum(m2)/len(m2)
-        masterlist.append(func(X,kT,A,B))
+        #m2 = [n ** 2 for n in m]
+        sample2 = np.square(sample)
+
+        #A = sum(m)/len(m)
+        #B = sum(m2)/len(m2)
+
+        samplemean = sample.mean()
+        sample2mean = sample2.mean()
+        jacknife_estimate[i] = func(X,kT,samplemean,sample2mean)
 
     #Create squared specific heat list and calcuate averages
-    masterlist2 = [n**2 for n in masterlist]
-    c = sum(masterlist)/len(masterlist)
-    c2 = sum(masterlist2)/len(masterlist2)
+    jacknife_estimate2 = np.square(jacknife_estimate)
+    c = jacknife_estimate.mean()
+    c2 = jacknife_estimate2.mean()
 
     #Calculate errors
     error = np.sqrt(c2-c**2) * np.sqrt(len(L))
@@ -206,7 +213,7 @@ def run_dynamics(nsteps,X,D,kT,spins):
         error_c_jack = jacknife(Elist,calc_c,X,kT)
         error_m_jack = jacknife(Mlist,calc_x,X,kT)
 
-        return [avE,avM,avmodM,c,x,error_c_boot,error_m_boot,error_c_jack,error_m_jack],spins
+        return [avE,avM,avmodM,c,x,error_c_boot,error_c_jack,error_m_boot,error_m_jack],spins
 
     elif D == "K":
         Elist = []

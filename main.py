@@ -8,8 +8,8 @@ from Animation import animations
 
 """""
 This main file initilises the arrays and runs the dynamics for a range of temperatures
-Choose between running the animation by entering Y for the animation option.
-For measurements enter N
+Choose between running the animation by entering Y for the animation option the follow instructions.
+For measurements enter N then input desired values.
 """""
 
 ani = input("Animation: ")
@@ -64,4 +64,4 @@ else:
 
     df = pd.DataFrame(dic)
     df.insert(0,"Temperature",T)
-    df.to_csv("Simulation_Data_Kawasaki",index = False)
+    df.to_csv("Simulation_Data_Glauber_TEST",index = False)
