@@ -34,9 +34,10 @@ if ani == "Y":
     animations(nsteps,X,D,kT,spins)
 
 else:
-    N, D, nsteps = input("Input size of array, sweeps and type of dynamic: ").split(" ")
+    N, nsteps, D = input("Input size of array, sweeps and type of dynamic: ").split(" ")
     X = int(N)
     Y = X
+    nsteps = int(nsteps)
 
     if D == "G":
         spins = np.ones((X,Y))
@@ -62,4 +63,5 @@ else:
         dic.update({cols[i]:dic1[i]})
 
     df = pd.DataFrame(dic)
-    df.to_csv("Simulation_Data_Kawasaki")
+    df.insert(0,"Temperature",T)
+    df.to_csv("Simulation_Data_Kawasaki",index = False)

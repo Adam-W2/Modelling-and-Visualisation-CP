@@ -14,10 +14,10 @@ def Kawasaki(X,Y,kT,spins):
     for i in range(X):
         for j in range(Y):
             #pick two random points
-            itrial1 = np.random.randint(0,X)
-            jtrial1 = np.random.randint(0,Y)
-            itrial2 = np.random.randint(0,X)
-            jtrial2 = np.random.randint(0,Y)
+            itrial1 = random.randint(0,X-1)
+            jtrial1 = random.randint(0,Y-1)
+            itrial2 = random.randint(0,X-1)
+            jtrial2 = random.randint(0,Y-1)
 
             spin1 = spins[itrial1][jtrial1]
             spin2 = spins[itrial2][jtrial2]
@@ -57,8 +57,8 @@ def Glauber(X,Y,kT,spins):
     for i in range(X):
         for j in range(Y):
             #Pick random point
-            itrial = np.random.randint(0,X)
-            jtrial = np.random.randint(0,Y)
+            itrial = random.randint(0,X-1)
+            jtrial = random.randint(0,Y-1)
 
             #Flip point spin
             spin_new = -spins[itrial,jtrial]
@@ -181,6 +181,7 @@ def run_dynamics(nsteps,X,D,kT,spins):
             Glauber(X,Y,kT,spins)
             #After 100 sweeps measurements are started to be taken. Every 10 sweeps it takes measurements
             if n % 10 == 0 and n > 100:
+                #Appends values to each list
                 E,M = measure(X,Y,spins)
                 Elist.append(E)
                 E2list.append(E**2)
@@ -188,21 +189,18 @@ def run_dynamics(nsteps,X,D,kT,spins):
                 modMlist.append(np.absolute(M))
                 M2list.append(M**2)
 
-                #show animation
-                plt.cla()
-                im = plt.imshow(spins, animated=True,vmin =-1,vmax=1)
-                plt.draw()
-                plt.pause(0.00001)
-
+        #Calulates an average for each measurement list
         avE = sum(Elist)/len(Elist)
         avE2 = sum(E2list)/len(E2list)
         avM = sum(Mlist)/len(Mlist)
         avmodM = sum(modMlist)/len(modMlist)
         avM2 = sum(M2list)/len(M2list)
 
+        #Calculates the specific heat and suseptibility
         c = calc_c(X,kT,avE,avE2)
         x = calc_x(X,kT,avM,avM2)
 
+        #Calculates the erorr
         error_c_boot = bootstrap(Elist,calc_c,X,kT)
         error_m_boot = bootstrap(Mlist,calc_x,X,kT)
         error_c_jack = jacknife(Elist,calc_c,X,kT)
@@ -214,18 +212,24 @@ def run_dynamics(nsteps,X,D,kT,spins):
         Elist = []
         E2list = []
 
+        #Loops through number of desired sweeps
         for n in range(nsteps):
+            #Update spins using Kawasaki dynamics
             Kawasaki(X,Y,kT,spins)
+            #After 100 sweeps measurements are started to be taken. Every 10 sweeps it takes measurements
             if n % 10 == 0 and n > 100:
                 E,M = measure(X,Y,spins)
                 Elist.append(E)
                 E2list.append(E**2)
 
-                #show animation
-
+        #Calculates averages for each value list
         avE = sum(Elist) / len(Elist)
         avE2 = sum(E2list) / len(E2list)
+
+        #Calculates specific heat
         c = calc_c(X,kT,avE,avE2)
+
+        #Calculates the error using Jacknife or Bootstrap
         error_c_boot = bootstrap(Elist,calc_c,X,kT)
         error_c_jack = jacknife(Elist,calc_c,X,kT)
 
