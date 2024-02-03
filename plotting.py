@@ -2,7 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 
-name = "Simulation_Data_Glauber"
+name = "Simulation_Data_Glauber1"
 
 df = pd.read_csv(name)
 T = np.linspace(1,3,20)
@@ -27,10 +27,10 @@ for i in col:
         plt.ylabel(i)
 """""
 fig1 = plt.figure("Figure 1")
-plt.errorbar(T,df["Specific Heat"],yerr=df["Error c boot"],capsize=2, markeredgewidth=1)
+plt.errorbar(T,df["Susepctibility"],yerr=df["Error x boot"],capsize=2, markeredgewidth=1)
 plt.title("Bootstrap")
 fig2 = plt.figure("Figure 2")
-plt.errorbar(T,df["Specific Heat"],yerr=df["Error x boot"],capsize=2, markeredgewidth=1)
+plt.errorbar(T,df["Susepctibility"],yerr=df["Error x jack"],capsize=2, markeredgewidth=1)
 plt.title("Jacknife")
 #plt.plot(T,df["Specific Heat"])
 plt.show()
