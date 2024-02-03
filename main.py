@@ -64,4 +64,4 @@ else:
 
     df = pd.DataFrame(dic)
     df.insert(0,"Temperature",T)
-    df.to_csv("Simulation_Data_Glauber1",index = False)
+    df.to_csv("Simulation_Data_Glauber",index = False)
