@@ -19,7 +19,7 @@ if ani == "Y":
 
     X = int(N)
     Y = X
-    kT = int(T)
+    kT = float(T)
     nsteps = int(nsteps)
     spins = np.ones((X,Y))
 

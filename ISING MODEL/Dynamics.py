@@ -43,7 +43,7 @@ def Kawasaki(X,Y,kT,spins):
 
                 #If the absolute distance is 1, account for over counting
                 if distance == 1:
-                    Edelta -= 1
+                    Edelta += 4
 
                 #Apply metropilis algorithm
                 r = random.random()
