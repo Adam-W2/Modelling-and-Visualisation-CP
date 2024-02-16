@@ -25,9 +25,9 @@ class Grid:
         array = np.zeros((self.rows, self.columns))
         final = self.rows - 1
         for i in range(1,4):
-            array[final - 1][final-i] = 1
-        array[final-2][final-1] = 1
-        array[final-3][final-2] = 1
+            array[self.columns//2 - 1][self.rows//2-i] = 1
+        array[self.columns//2-2][self.rows//2-1] = 1
+        array[self.columns//2-3][self.rows//2-2] = 1
 
         self.grid_array = array
         return self.grid_array
@@ -86,3 +86,13 @@ class Grid:
                 temp += self.grid_array[x_edge][y_edge]
         temp -= self.grid_array[x][y]
         return temp
+
+    def momentum(self):
+        loc = np.where(self.grid_array == 1)
+        if self.rows - 1 not in loc[0] and self.rows - 1 not in loc[1]:
+            xmean = np.mean(loc[0])
+            ymean = np.mean(loc[1])
+        else:
+            xmean = 0
+            ymean = 0
+        return xmean,ymean
