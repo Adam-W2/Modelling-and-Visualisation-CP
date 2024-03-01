@@ -12,7 +12,7 @@ class Grid:
         self.prob3 = P3
         self.rows = N
         self.columns = N
-        self.grid_array = 0
+        self.grid_array = np.zeros((self.rows, self.columns), dtype=int)
 
     def create_random_grid(self):
         self.grid_array = np.random.choice([1,0, -1], size=(self.rows, self.columns), p=[1/3,1/3,1/3])
@@ -20,28 +20,30 @@ class Grid:
 
     def SIRS(self):
 
-        for i in range(self.rows):
-            for j in range(self.columns):
-                x = random.randint(0,self.columns-1)
-                y = random.randint(0,self.rows-1)
+        x = random.randint(0,self.columns-1)
+        y = random.randint(0,self.rows-1)
 
-                state = self.grid_array[x][y]
-                infected = self.get_neighbours(x, y)
+        state = self.grid_array[x][y]
+        infected = self.get_neighbours(x, y)
 
-                r = random.random()
+        r = random.random()
 
-                if state == 1 and infected:
-                    if r < self.prob1:
-                        self.grid_array[x][y] = 0
-                elif state == 0:
-                    if r < self.prob2:
-                        self.grid_array[x][y] = -1
-                else:
-                    if r < self.prob3:
-                        self.grid_array[x][y] = 1
+        if state == 1 and infected:
+            if r < self.prob1:
+                self.grid_array[x][y] = 0
+
+        elif state == 0:
+            if r < self.prob2:
+                self.grid_array[x][y] = -1
+
+        else:
+            if r < self.prob3:
+                self.grid_array[x][y] = 1
+
 
     def summing(self):
         return np.sum(self.grid_array)
+
 
     def get_neighbours(self, x, y):
         temp = False
@@ -58,10 +60,14 @@ class Grid:
 
         return temp
 
+    def update_grid(self):
+        for _ in range(self.rows **2):
+            self.SIRS()
+
     def animation(self,nsteps):
         for n in range(nsteps):
 
-            self.SIRS()
+            self.update_grid()
             if n % 5 == 0:
                 # show animation
                 plt.cla()
@@ -72,7 +78,7 @@ class Grid:
     def measure_contour(self,nsteps):
         count = 0
         for n in range(nsteps):
-            self.SIRS()
+            self.update_grid()
             if n >= 100:
                 unique, counts = np.unique(self.grid_array, return_counts=True)
                 if 0 in unique:

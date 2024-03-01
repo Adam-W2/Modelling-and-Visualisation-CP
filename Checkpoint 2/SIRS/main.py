@@ -4,8 +4,8 @@ import matplotlib.pyplot as plt
 
 #wave state: p1 = 0.8, p2 = 0.3, p3 = 0.01
 #N,nstep,p1,p2,p3 = input("Please input N,nsteps,p1,p2 and p3: ").split()
-N = 50
-nstep = 500
+N = 100
+nstep = 5000
 p1 = 0.8
 p2 = 0.1
 p3 = 0.01
@@ -13,14 +13,14 @@ p3 = 0.01
 nsteps = int(nstep)
 grid = Grid(int(N), float(p1), float(p2), float(p3))
 
-which = "a"
+which = "animation"
 if which == "animation":
     grid.create_random_grid()
     grid.animation(nsteps)
 
 else:
-    p3list = np.arange(0,1,0.02)
-    p1list = np.arange(0,1,0.02)
+    p3list = np.arange(0,1,0.05)
+    p1list = np.arange(0,1,0.05)
     size = len(p3list)
     p2 = 0.5
     n = 0
@@ -37,7 +37,7 @@ else:
             average = grid.measure_contour(nsteps)
             matrix[x,y] = average/(N**2)
             n += 1
-            print(f"{n/len(p1list)**2}% calculated...")
+            print(f"{100 * n/len(p1list)**2}% calculated...")
             y += 1
         x += 1
 
