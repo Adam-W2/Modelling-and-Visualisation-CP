@@ -16,7 +16,7 @@ if Choice == "R":
         equilstep = []
         nstepslist = np.arange(0, nsteps, 1)
 
-        for i in range(300):
+        for i in range(500):
             j = 0
             sumold = 0
             grid.create_random_grid()
@@ -51,7 +51,7 @@ if Choice == "R":
 
         print("Complete!")
         df = pd.DataFrame({"nsteps":equilstep})
-        df.to_csv("test1.csv")
+        df.to_csv("test2.csv")
 
     else:
 

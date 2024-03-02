@@ -1,6 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
-file = "test1.csv"
+file = "test2.csv"
 sr = pd.read_csv(file)
-
-plt.hist(sr)
+print(sr.head())
+plt.hist(sr["nsteps"],50)
+plt.show()
