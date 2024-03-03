@@ -36,9 +36,10 @@ class Grid:
             if r < self.prob2:
                 self.grid_array[x][y] = -1
 
-        else:
+        elif state == -1:
             if r < self.prob3:
                 self.grid_array[x][y] = 1
+
 
     def get_neighbours(self, x, y):
         temp = False
@@ -66,13 +67,14 @@ class Grid:
             if n % 5 == 0:
                 # show animation
                 plt.cla()
-                im = plt.imshow(self.grid_array, animated=True, vmin=-1, vmax=1)
+                im = plt.imshow(self.grid_array, animated=True, vmin=-1, vmax=2)
+
                 plt.draw()
                 plt.pause(0.00001)
 
     def measure_contour(self,nsteps):
         count = []
-        count_sqr = []
+        #count_sqr = []
         for n in range(nsteps):
             self.update_grid()
             if n >= 100:
@@ -82,18 +84,18 @@ class Grid:
                     unique_list = unique.tolist()
                     index = unique_list.index(0)
                     count.append(counts[index])
-                    count_sqr.append(counts[index] **2)
+                    #count_sqr.append(counts[index] **2)
         if len(count) != 0:
-            error = self.bootstrap(count,self.calc_I)
+            #error = self.bootstrap(count,self.calc_I)
             avg = sum(count)/len(count)
-            avg2 = sum(count_sqr)/len(count_sqr)
+            #avg2 = sum(count_sqr)/len(count_sqr)
 
         else:
             avg = 0
-            error = 0
-            avg2 = 0
+            #error = 0
+            #avg2 = 0
 
-        return avg,avg2,error
+        return avg
 
     def calc_I(self,I1,I2):
         # Calcualte the susepectibility
@@ -137,5 +139,9 @@ class Grid:
         num_immune_cells = int(self.rows * self.columns * percentage_immune)
         immune_indices = np.random.choice(range(self.rows * self.columns), size=num_immune_cells, replace=False)
         immune_coords = np.unravel_index(immune_indices, (self.rows, self.columns))
-        self.grid_array[immune_coords] = 2
+        for i in range(len(immune_coords[0])):
+            x = immune_coords[0][i]
+            y = immune_coords[1][i]
+            self.grid_array[x,y] = 2
+
 

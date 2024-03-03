@@ -9,9 +9,9 @@ import pandas as pd
 #N,nstep,p1,p2,p3 = input("Please input N,nsteps,p1,p2 and p3: ").split()
 N = 50
 nstep = 1000
-p1 = 0.8
-p2 = 0.1
-p3 = 0.01
+p1 = 0.5
+p2 = 0.5
+p3 = 0.5
 nsteps = int(nstep)
 
 which = "animatio"
@@ -22,13 +22,14 @@ if which == "animation":
     nsteps = int(nstep)
     grid = Grid(int(N),float(p1),float(p2),float(p3))
     grid.create_random_grid()
+
     grid.animation(nsteps)
 
 else:
     """""
     This part of the code calculates the contour plot with varying p1 and p3
     """""
-    measure = "set"
+    measure = "se"
     if measure == "both":
         p3list = np.arange(0,1,0.05)
         p1list = np.arange(0,1,0.05)
