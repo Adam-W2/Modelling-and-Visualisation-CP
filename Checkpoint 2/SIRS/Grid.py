@@ -72,6 +72,7 @@ class Grid:
 
     def measure_contour(self,nsteps):
         count = []
+        count_sqr = []
         for n in range(nsteps):
             self.update_grid()
             if n >= 100:
@@ -81,15 +82,18 @@ class Grid:
                     unique_list = unique.tolist()
                     index = unique_list.index(0)
                     count.append(counts[index])
-
+                    count_sqr.append(counts[index] **2)
         if len(count) != 0:
             error = self.bootstrap(count,self.calc_I)
             avg = sum(count)/len(count)
+            avg2 = sum(count_sqr)/len(count_sqr)
 
         else:
             avg = 0
             error = 0
-        return avg,error
+            avg2 = 0
+
+        return avg,avg2,error
 
     def calc_I(self,I1,I2):
         # Calcualte the susepectibility
@@ -129,9 +133,9 @@ class Grid:
         error = np.sqrt(c2 - c ** 2)
         return error
 
-    def add_immune_cells(self,num_immune_cells):
-        for _ in range(num_immune_cells):
-            x = random.randint(0,self.columns - 1)
-            y = random.randint(0,self.rows - 1)
-            self.grid_array[x][y] = 2
+    def add_immune_cells(self, percentage_immune):
+        num_immune_cells = int(self.rows * self.columns * percentage_immune)
+        immune_indices = np.random.choice(range(self.rows * self.columns), size=num_immune_cells, replace=False)
+        immune_coords = np.unravel_index(immune_indices, (self.rows, self.columns))
+        self.grid_array[immune_coords] = 2
 
