@@ -72,9 +72,10 @@ class Grid:
                 plt.draw()
                 plt.pause(0.00001)
 
-    def measure_contour(self,nsteps):
+    def measure_contour(self,nsteps,which):
         count = []
-        #count_sqr = []
+        if which == "set":
+            count_sqr = []
         for n in range(nsteps):
             self.update_grid()
             if n >= 100:
@@ -84,18 +85,24 @@ class Grid:
                     unique_list = unique.tolist()
                     index = unique_list.index(0)
                     count.append(counts[index])
-                    #count_sqr.append(counts[index] **2)
+                    if which == "set":
+                        count_sqr.append(counts[index] **2)
         if len(count) != 0:
-            #error = self.bootstrap(count,self.calc_I)
+
             avg = sum(count)/len(count)
-            #avg2 = sum(count_sqr)/len(count_sqr)
+            if which == "set":
+                error = self.bootstrap(count,self.calc_I)
+                avg2 = sum(count_sqr)/len(count_sqr)
 
         else:
             avg = 0
-            #error = 0
-            #avg2 = 0
-
-        return avg
+            if which == "set":
+                error = 0
+                avg2 = 0
+        if which == "set":
+            return avg,avg2,error
+        else:
+            return avg
 
     def calc_I(self,I1,I2):
         # Calcualte the susepectibility

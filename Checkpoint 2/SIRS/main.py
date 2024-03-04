@@ -6,20 +6,15 @@ import pandas as pd
 #absorbing: p1 = 0.5, p2 = 0.6, p3 = 0.1
 #dynamic: p1 = 0.5, p2 = 0.6, p3 = 0.45
 #wave state: p1 = 0.8, p2 = 0.1, p3 = 0.01
-#N,nstep,p1,p2,p3 = input("Please input N,nsteps,p1,p2 and p3: ").split()
-N = 50
-nstep = 1000
-p1 = 0.5
-p2 = 0.5
-p3 = 0.5
-nsteps = int(nstep)
+which = input("Please input what code you want to run: ")
 
-which = "animatio"
 if which == "animation":
     """""
     This part of the code runs just the animation for selected probabilites
     """""
+    N,nstep,p1,p2,p3 = input("Please input N,nsteps,p1,p2 and p3: ").split()
     nsteps = int(nstep)
+
     grid = Grid(int(N),float(p1),float(p2),float(p3))
     grid.create_random_grid()
 
@@ -29,7 +24,10 @@ else:
     """""
     This part of the code calculates the contour plot with varying p1 and p3
     """""
-    measure = "se"
+    N,nstep, measure = input("Please input N,nsteps and which measurement you want to test: ").split()
+    nsteps = int(nstep)
+    N = int(N)
+
     if measure == "both":
         p3list = np.arange(0,1,0.05)
         p1list = np.arange(0,1,0.05)
@@ -46,7 +44,7 @@ else:
                 grid = Grid(int(N), float(p1), float(p2), float(p3))
                 grid.create_random_grid()
 
-                average = grid.measure_contour(nsteps)
+                average = grid.measure_contour(nsteps,measure)
                 matrix[x,y] = average/(N**2)
                 n += 1
                 print(f"{100 * n/len(p1list)**2}% calculated...")
@@ -55,7 +53,7 @@ else:
 
         plt.imshow(matrix)
         plt.show()
-        np.savetxt("array2.csv",matrix,delimiter=",")
+        #np.savetxt("array2.csv",matrix,delimiter=",")
     elif measure == "set":
         """""
         This part of the code is for plotting the set p3 value variance plot with error bars
@@ -74,7 +72,7 @@ else:
             grid = Grid(int(N),float(p1),float(p2),float(p3))
             grid.create_random_grid()
 
-            I,I2,error = grid.measure_contour(nsteps)
+            I,I2,error = grid.measure_contour(nsteps,measure)
             averages.append((I2-I**2)/N**2)
             errors.append(error)
 
@@ -103,7 +101,7 @@ else:
                 grid = Grid(int(N),float(p1),float(p2),float(p3))
                 grid.create_random_grid()
                 grid.add_immune_cells(i)
-                I = grid.measure_contour(nsteps)
+                I = grid.measure_contour(nsteps,measure)
                 temp.append(I)
             avgtemp = sum(temp)/len(temp)
             average.append(avgtemp/N**2)
@@ -112,5 +110,5 @@ else:
 
         df = pd.DataFrame({"Infected Fraction":average,"Immune Fraction":immunelist})
         df.to_csv("Immune1.csv",index= False)
-        plt.plot(immunelist,df["Counts"])
+        plt.plot(immunelist,df["Infected Fraction"])
         plt.show()
