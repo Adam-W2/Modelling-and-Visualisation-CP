@@ -83,6 +83,12 @@ else:
     if set == "blinker":
         grid.blinker()
 
+        # show animation
+        plt.cla()
+        im = plt.imshow(grid.grid_array, animated=True, vmin=0, vmax=1)
+        plt.draw()
+        plt.pause(0.0001)
+
     elif set == "glider":
         grid.glider()
         alivelist = []
@@ -119,9 +125,12 @@ else:
         plt.xlabel("Time step")
         plt.ylabel("X position")
         plt.title("X position Vs Time")
+        df = pd.DataFrame({"nsteps":nstepslist,"xposition":xlist})
+        df.to_csv("Data/Xgliderdata.csv", index=False)
 
         a = np.polyfit(nsteptruncated, xtruncated, 1)
-        print(f"The velocity of the {set} is {a[0].round(2)}")
+        print(f"The speed of the {set} in the X axis is {a[0].round(2)}")
+        print(f"The velocity of the {set} is {np.sqrt((a[0].round(2))**2 + (a[0].round(2))**2)}")
 
         fig2 = plt.figure("Figure 2")
         plt.plot(nstepslist, ylist)
@@ -146,8 +155,6 @@ else:
             im = plt.imshow(grid.grid_array, animated=True, vmin=0, vmax=1)
             plt.draw()
             plt.pause(0.0001)
-            if n % 10 == 0:
-                print(n)
 
         fig2 = plt.figure("Figure 2")
         plt.plot(nstepslist, alivelist)
