@@ -2,7 +2,6 @@ import matplotlib
 matplotlib.use("TKAgg")
 import matplotlib.pyplot as plt
 from Grid import Grid
-import numpy as np
 import pandas as pd
 
 N = 100
