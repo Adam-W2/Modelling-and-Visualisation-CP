@@ -15,9 +15,9 @@ class Grid:
 
         sumold = np.sum(self.grid)
 
-        neighbours = (np.roll(self.grid, (1, 0,0), (1, 0,0)) + np.roll(self.grid, (-1, 0,0), (1, 0,0)) +
-                      np.roll(self.grid, (0, 1,0), (0, -1,0)) + np.roll(self.grid, (0, -1,0),(0, -1,0)) +
-                      np.roll(self.grid,(1,0,0),(0,-1,0)) + np.roll(self.grid,(-1,0,0),(0,-1,0)))
+        neighbours = (np.roll(self.grid, 1, axis=2) + np.roll(self.grid, -1, axis=2) +
+                      np.roll(self.grid, 1, axis=1) + np.roll(self.grid, -1,axis=1) +
+                      np.roll(self.grid,1,axis=0) + np.roll(self.grid,-1,axis=0))
 
         self.grid = 1/6 * (neighbours + self.rho)
 
@@ -29,10 +29,18 @@ class Grid:
         sumnew = np.sum(self.grid)
 
         return sumold,sumnew
-
+    def step_gauss(self):
+        sumold = np.sum(self.grid)
+        for i in range(len(self.grid)-1):
+            for j in range(len(self.grid)-1):
+                for k in range(len(self.grid)-1):
+                    self.grid[i,j,k] = 1/6 * (self.grid[i,j+1,k] + self.grid[i,j-1,k] + self.grid[i+1,j,k] +
+                                              self.grid[i-1,j,k] + self.grid[i,j,k+1] + self.grid[i,j,k-1] + self.rho[i,j,k])
+        sumnew = np.sum(self.grid)
+        return sumold,sumnew
     def efield(self):
-        x = (np.roll(self.grid, (1, 0,0), (1, 0,0)) - np.roll(self.grid, (-1, 0,0), (1, 0,0)))/2
-        y = (np.roll(self.grid, (0, 1,0), (0, -1,0)) - np.roll(self.grid, (0, -1,0),(0, -1,0)))/2
-        z = (np.roll(self.grid,(1,0,0),(0,-1,0)) - np.roll(self.grid,(-1,0,0),(0,-1,0)))/2
-        E = - (x + y + z)
-        return E,-x[25,:,:],-y[25,:,:],-z[50,:,:]
+
+        x = (np.roll(self.grid, 1, axis=2) - np.roll(self.grid, -1, axis=2))/2
+        y = (np.roll(self.grid, 1, axis=1) - np.roll(self.grid, -1,axis=1))/2
+        z = (np.roll(self.grid,1,axis=0) - np.roll(self.grid,-1,axis=0))/2
+        return x[25,:,:],y[25,:,:],z[25,:,:]
