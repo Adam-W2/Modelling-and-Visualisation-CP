@@ -7,9 +7,10 @@ N = 51
 error = 1e-3
 grid = Grid(N)
 
-grid.initialrho()
-which = "gauss"
+which = "pee"
 if which == "jac":
+    grid.initialrho()
+
     flag = True
     while flag:
         old,new = grid.steps()
@@ -21,7 +22,9 @@ if which == "jac":
     np.savetxt("Ey.csv",y,delimiter=",")
     np.savetxt("Ez.csv",z,delimiter=",")
     np.savetxt("Potential.csv",grid.grid[50,:,:],delimiter=",")
-else:
+elif which == "gauss":
+    grid.initialrho()
+
     flag = True
     while flag:
         old, new = grid.step_gauss()
@@ -33,3 +36,15 @@ else:
     np.savetxt("Ey_gauss.csv", y, delimiter=",")
     np.savetxt("Ez_gauss.csv", z, delimiter=",")
     np.savetxt("Potential_gauss.csv", grid.grid[25, :, :], delimiter=",")
+else:
+    grid.initialrho_wire()
+    flag = True
+    while flag:
+        old,new = grid.steps()
+        if abs(old-new) < error:
+            flag = False
+    x, y, z = grid.efield()
+    np.savetxt("Mx.csv", x, delimiter=",")
+    np.savetxt("My.csv", y, delimiter=",")
+    np.savetxt("Mz.csv", z, delimiter=",")
+    np.savetxt("Potential_mag.csv", grid.grid[25, :, :], delimiter=",")

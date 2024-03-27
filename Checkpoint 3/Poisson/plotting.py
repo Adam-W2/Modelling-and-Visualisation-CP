@@ -5,9 +5,9 @@ import pandas as pd
 import numpy as np
 
 Potential = pd.read_csv("Potential_gauss.csv")
-xgrad = pd.read_csv("Ex_gauss.csv")
-ygrad = pd.read_csv("Ey_gauss.csv")
-zgrad = pd.read_csv("Ez_gauss.csv")
+xgrad = pd.read_csv("Mx.csv")
+ygrad = pd.read_csv("My.csv")
+zgrad = pd.read_csv("Mz.csv")
 
 xgrad = np.array(xgrad)
 ygrad = np.array(ygrad)

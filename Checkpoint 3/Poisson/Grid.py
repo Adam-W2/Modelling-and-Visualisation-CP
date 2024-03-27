@@ -11,6 +11,9 @@ class Grid:
     def initialrho(self):
         self.rho[int(self.rows/2),int(self.columns/2),int(self.rows/2)] = 1
 
+    def initialrho_wire(self):
+        self.rho[:,int(self.columns/2),int(self.rows/2)] = 1
+
     def steps(self):
 
         sumold = np.sum(self.grid)
@@ -38,6 +41,10 @@ class Grid:
                                               self.grid[i-1,j,k] + self.grid[i,j,k+1] + self.grid[i,j,k-1] + self.rho[i,j,k])
         sumnew = np.sum(self.grid)
         return sumold,sumnew
+
+    def step_mag(self):
+        l= 0
+
     def efield(self):
 
         x = (np.roll(self.grid, 1, axis=2) - np.roll(self.grid, -1, axis=2))/2
