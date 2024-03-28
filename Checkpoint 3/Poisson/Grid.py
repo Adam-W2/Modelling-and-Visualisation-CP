@@ -60,6 +60,7 @@ class Grid:
         return x[25,:,:],y[25,:,:],z[25,:,:]
 
     def bfield(self):
-        Bx = (np.roll(self.grid[25,:,:], 1, axis=1) - np.roll(self.grid[25,:,:], -1, axis=1))/2
-        By = -(np.roll(self.grid[25,:,:], 1, axis=0) - np.roll(self.grid[25,:,:], -1, axis=0))/2
-        return Bx,By
+        Bx = (np.roll(self.grid, 1, axis=1) - np.roll(self.grid, -1, axis=1))/2
+        By = -(np.roll(self.grid, 1, axis=2) - np.roll(self.grid, -1, axis=2))/2
+
+        return Bx[25,:,:],By[25,:,:]

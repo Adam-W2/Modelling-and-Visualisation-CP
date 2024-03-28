@@ -44,7 +44,10 @@ else:
         if abs(old-new) < error:
             flag = False
     Bx, By = grid.bfield()
+    print(Bx.shape)
+    print(By.shape)
     np.savetxt("Mx1.csv", Bx, delimiter=",")
     np.savetxt("My1.csv", By, delimiter=",")
-
+    plt.imshow(grid.grid[25,:,:])
+    plt.show()
     np.savetxt("Potential_mag.csv", grid.grid[25, :, :], delimiter=",")
