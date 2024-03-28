@@ -43,7 +43,14 @@ class Grid:
         return sumold,sumnew
 
     def step_mag(self):
-        l= 0
+        sumold = np.sum(self.grid)
+        for i in range(len(self.grid)-1):
+            for j in range(len(self.grid)-1):
+                for k in range(len(self.grid)-1):
+                    self.grid[i,j,k] = 1/6 * (self.grid[i,j+1,k] + self.grid[i,j-1,k] + self.grid[i+1,j,k] +
+                                              self.grid[i-1,j,k] + self.grid[i,j,k+1] + self.grid[i,j,k-1] + self.rho[i,j,k])
+        sumnew = np.sum(self.grid)
+        return sumold,sumnew
 
     def efield(self):
 
@@ -51,3 +58,8 @@ class Grid:
         y = (np.roll(self.grid, 1, axis=1) - np.roll(self.grid, -1,axis=1))/2
         z = (np.roll(self.grid,1,axis=0) - np.roll(self.grid,-1,axis=0))/2
         return x[25,:,:],y[25,:,:],z[25,:,:]
+
+    def bfield(self):
+        Bx = (np.roll(self.grid[25,:,:], 1, axis=1) - np.roll(self.grid[25,:,:], -1, axis=1))/2
+        By = -(np.roll(self.grid[25,:,:], 1, axis=0) - np.roll(self.grid[25,:,:], -1, axis=0))/2
+        return Bx,By

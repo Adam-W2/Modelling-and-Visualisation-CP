@@ -7,18 +7,18 @@ import numpy as np
 Potential = pd.read_csv("Potential_gauss.csv")
 xgrad = pd.read_csv("Mx.csv")
 ygrad = pd.read_csv("My.csv")
-zgrad = pd.read_csv("Mz.csv")
+zgrad = pd.read_csv("zgrad.csv")
 
 xgrad = np.array(xgrad)
 ygrad = np.array(ygrad)
 zgrad = np.array(zgrad)
 
-xnorm = xgrad/np.sqrt(xgrad**2+ygrad**2+zgrad**2)
-ynorm = ygrad/np.sqrt(xgrad**2+ygrad**2+zgrad**2)
+xnorm = xgrad/np.sqrt(xgrad**2+ygrad**2)
+ynorm = ygrad/np.sqrt(xgrad**2+ygrad**2)
 znorm = zgrad/np.sqrt(xgrad**2+ygrad**2+zgrad**2)
 
 Potential = np.array(Potential)
-when = "now"
+when = "no"
 
 if when == "now":
     fig2 = plt.figure("Figure 2")

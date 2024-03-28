@@ -7,7 +7,7 @@ N = 51
 error = 1e-3
 grid = Grid(N)
 
-which = "pee"
+which = "j"
 if which == "jac":
     grid.initialrho()
 
@@ -18,10 +18,10 @@ if which == "jac":
             flag = False
 
     x,y,z = grid.efield()
-    np.savetxt("Ex.csv",x,delimiter=",")
-    np.savetxt("Ey.csv",y,delimiter=",")
-    np.savetxt("Ez.csv",z,delimiter=",")
-    np.savetxt("Potential.csv",grid.grid[50,:,:],delimiter=",")
+    np.savetxt("Ex1.csv",x,delimiter=",")
+    np.savetxt("Ey1.csv",y,delimiter=",")
+    np.savetxt("Ez1.csv",z,delimiter=",")
+    np.savetxt("Potential1.csv",grid.grid[50,:,:],delimiter=",")
 elif which == "gauss":
     grid.initialrho()
 
@@ -43,8 +43,8 @@ else:
         old,new = grid.steps()
         if abs(old-new) < error:
             flag = False
-    x, y, z = grid.efield()
-    np.savetxt("Mx.csv", x, delimiter=",")
-    np.savetxt("My.csv", y, delimiter=",")
-    np.savetxt("Mz.csv", z, delimiter=",")
+    Bx, By = grid.bfield()
+    np.savetxt("Mx1.csv", Bx, delimiter=",")
+    np.savetxt("My1.csv", By, delimiter=",")
+
     np.savetxt("Potential_mag.csv", grid.grid[25, :, :], delimiter=",")
