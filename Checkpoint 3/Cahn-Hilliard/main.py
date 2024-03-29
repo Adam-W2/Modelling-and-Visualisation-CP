@@ -4,6 +4,10 @@ import matplotlib.pyplot as plt
 from Grid import Grid
 import pandas as pd
 
+#TO DO#
+#Need to use pandas dataframe instead of numpy array txt
+#Update plots with colour bar and create plots of final files
+
 N = 100
 dx = 1
 dt = 1
