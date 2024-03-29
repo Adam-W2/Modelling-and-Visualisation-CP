@@ -7,6 +7,11 @@ N = 51
 error = 1e-3
 grid = Grid(N)
 
+#TO DO#
+#Need to use pandas dataframe instead of numpy array txt
+#Update plots with colour bar and create plots of final files
+#Allow for user input as well
+
 which = "mag"
 if which == "jac":
     grid.initialrho()
