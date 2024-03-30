@@ -12,7 +12,7 @@ grid = Grid(N)
 #Update plots with colour bar and create plots of final files
 #Allow for user input as well
 
-which = "mag"
+which = "jac"
 if which == "jac":
     grid.initialrho()
 
@@ -23,10 +23,16 @@ if which == "jac":
             flag = False
 
     x,y,z = grid.efield()
-    np.savetxt("Data/Ex_final.csv",x,delimiter=",")
-    np.savetxt("Data/Ey_final.csv",y,delimiter=",")
-    np.savetxt("Data/Ez_final.csv",z,delimiter=",")
-    np.savetxt("Data/Potential_final.csv",grid.grid[25,:,:],delimiter=",")
+
+    dfpot = pd.DataFrame(grid.grid[25,:,:])
+    dfx = pd.DataFrame(x)
+    dfy = pd.DataFrame(y)
+    dfz = pd.DataFrame(z)
+    dfpot.to_csv("Data/Potential_final.csv")
+    dfx.to_csv("Data/Ex_final.csv")
+    dfy.to_csv("Data/Ey_final.csv")
+    dfz.to_csv("Data/Ez_final.csv")
+
 elif which == "gauss":
     grid.initialrho()
 
@@ -37,29 +43,34 @@ elif which == "gauss":
             flag = False
 
     x, y, z = grid.efield()
-    np.savetxt("Data/Ex_gauss_final.csv", x, delimiter=",")
-    np.savetxt("Data/Ey_gauss_final.csv", y, delimiter=",")
-    np.savetxt("Data/Ez_gauss_final.csv", z, delimiter=",")
-    np.savetxt("Data/Potential_gauss_final.csv", grid.grid[25, :, :], delimiter=",")
+    dfpot = pd.DataFrame(grid.grid[25,:,:])
+    dfx = pd.DataFrame(x)
+    dfy = pd.DataFrame(y)
+    dfz = pd.DataFrame(z)
+    dfpot.to_csv("Data/Potential_gauss_final.csv")
+    dfx.to_csv("Data/Ex_gauss_final.csv")
+    dfy.to_csv("Data/Ey_gauss_final.csv")
+    dfz.to_csv("Data/Ez_gauss_final.csv")
+
 elif which == "mag":
     grid.initialrho_wire()
+
     flag = True
     while flag:
         old,new = grid.step_mag()
         if abs(old-new) < error:
             flag = False
     Bx, By = grid.bfield()
-    print(Bx.shape)
-    print(By.shape)
-    np.savetxt("Data/Mx_final.csv", Bx, delimiter=",")
-    np.savetxt("Data/My_final.csv", By, delimiter=",")
-    plt.imshow(grid.grid[25,:,:])
-    plt.show()
-    np.savetxt("Data/Potential_mag_final.csv", grid.grid[25, :, :], delimiter=",")
+    dfpot = pd.DataFrame(grid.grid[25,:,:])
+    dfx = pd.DataFrame(Bx).round(8)
+    dfy = pd.DataFrame(By)
+    dfpot.to_csv("Data/Potential_mag_final.csv")
+    dfx.to_csv("Data/Bx_final.csv")
+    dfy.to_csv("Data/By_final.csv")
 
 else:
     grid.initialrho()
-    wlist = np.linspace(1.5,2,25)
+    wlist = np.linspace(1.5,2,50)
     nlist = []
     for i in wlist:
         n = 0
@@ -77,8 +88,3 @@ else:
 
     df = pd.DataFrame({"w":wlist,"step count":nlist})
     df.to_csv("Data/overrelax_datafile.csv",index=False)
-    x,y,z = grid.efield()
-    np.savetxt("Data/Ex_over.csv",x,delimiter=",")
-    np.savetxt("Data/Ey_over.csv",y,delimiter=",")
-    np.savetxt("Data/Ez_over.csv",z,delimiter=",")
-    np.savetxt("Data/Potential2.csv",grid.grid[50,:,:],delimiter=",")

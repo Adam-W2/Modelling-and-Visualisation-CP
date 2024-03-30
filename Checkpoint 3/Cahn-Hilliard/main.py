@@ -23,10 +23,10 @@ for i in range(nsteps):
     if i % 10 == 0:
         free.append(grid.free_energy())
         steps.append(i)
-        #plt.cla()
-        #im = plt.imshow(grid.grid_phi, animated=True)
-        #plt.draw()
-        #plt.pause(0.00001)
+        plt.cla()
+        im = plt.imshow(grid.grid_phi, animated=True)
+        plt.draw()
+        plt.pause(0.00001)
     n += 1
 df = pd.DataFrame({"Free energy":free,"step":steps})
 df.to_csv("Data/test2_100000.csv",index=False)
