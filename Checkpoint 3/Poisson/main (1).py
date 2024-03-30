@@ -12,7 +12,7 @@ grid = Grid(N)
 #Update plots with colour bar and create plots of final files
 #Allow for user input as well
 
-which = "jac"
+which = "mag"
 if which == "jac":
     grid.initialrho()
 
