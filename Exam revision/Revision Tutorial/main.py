@@ -13,8 +13,9 @@ k = float(k)
 dt = float(dt)
 nsteps = int(nsteps)
 phi_zero = float(phi_zero)
+v = 1
 
-grid = Grid(sig,k,dt,phi_zero,N)
+grid = Grid(sig,k,v,dt,phi_zero,N)
 grid.create_phi_grid()
 n = 0
 nlist =[]
