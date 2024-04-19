@@ -18,8 +18,9 @@ class Grid:
 
     def steps(self):
         center_point = np.array((int(self.grid_phi.shape[0] / 2.), int(self.grid_phi.shape[1] / 2.)))
-        points = np.argwhere(self.grid_phi<=1000)
+        points = np.argwhere(self.grid_phi <= 1000)
         rsquare = ((points - center_point)**2).sum(axis=1).reshape((self.rows,self.columns))
+
         source = np.exp(-(rsquare/self.sig**2))
 
         neighbours_phi = (np.roll(self.grid_phi, 1,axis=0) + np.roll(self.grid_phi, -1, axis=0) +
