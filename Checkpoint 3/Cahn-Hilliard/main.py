@@ -4,11 +4,13 @@ import matplotlib.pyplot as plt
 from Grid import Grid
 import pandas as pd
 
-N = 100
-dx = 1
-dt = 1
-nsteps = 100000
-phi_zero = 0.5
+N,dx,dt,nsteps,phi_zero = input("Please input N, dx, dt number of steps and phi zero: ").split(" ")
+
+N = int(N)
+dx = float(dx)
+dt = float(dt)
+nsteps = int(nsteps)
+phi_zero = float(phi_zero)
 
 free = []
 steps = []
@@ -19,14 +21,14 @@ grid.create_phi_grid()
 
 for i in range(nsteps):
     grid.steps()
-    # show animation
     if i % 10 == 0:
         free.append(grid.free_energy())
         steps.append(i)
-        #plt.cla()
-        #im = plt.imshow(grid.grid_phi, animated=True)
-        #plt.draw()
-        #plt.pause(0.00001)
+        plt.cla()
+        im = plt.imshow(grid.grid_phi, animated=True)
+        plt.draw()
+        plt.pause(0.00001)
+
     n += 1
 df = pd.DataFrame({"Free energy":free,"step":steps})
 df.to_csv("Data/free_energy_05_100000.csv",index=False)

@@ -139,14 +139,9 @@ def jacknife(L,func,X,kT):
     for i in range(n):
         #Create new list and remove ith component
         sample = np.delete(L,i)
-        #m.remove(L[i])
 
         #Create squared version list and calculate specific heat, appending to masterlist
-        #m2 = [n ** 2 for n in m]
         sample2 = np.square(sample)
-
-        #A = sum(m)/len(m)
-        #B = sum(m2)/len(m2)
 
         samplemean = sample.mean()
         sample2mean = sample2.mean()
