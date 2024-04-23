@@ -5,14 +5,14 @@ from grid2019 import Grid
 import pandas as pd
 import numpy as np
 
-which = "an"
+which = "ani"
 if which == "ani":
 
     N = 100
     dx = 1
-    dt = 0.40
-    nsteps = 10000
-    F = 0.049
+    dt = 0.01
+    nsteps = 100000
+    F = 0.035
 
     grid = Grid(dx, dt, N,F)
     grid.create_U_grid()
