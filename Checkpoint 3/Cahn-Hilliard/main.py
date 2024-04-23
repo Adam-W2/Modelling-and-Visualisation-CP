@@ -3,6 +3,7 @@ matplotlib.use("TKAgg")
 import matplotlib.pyplot as plt
 from Grid import Grid
 import pandas as pd
+import numpy as np
 
 N,dx,dt,nsteps,phi_zero = input("Please input N, dx, dt number of steps and phi zero: ").split(" ")
 
@@ -24,6 +25,8 @@ for i in range(nsteps):
     if i % 10 == 0:
         free.append(grid.free_energy())
         steps.append(i)
+        print(np.mean(grid.grid_phi))
+
         plt.cla()
         im = plt.imshow(grid.grid_phi, animated=True)
         plt.draw()
