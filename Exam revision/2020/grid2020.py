@@ -22,31 +22,34 @@ class Grid:
             y = random.randint(0,self.rows-1)
 
             state = self.grid_array[x][y]
-            neighlist = self.get_neighbours(x, y)
+            xlist,ylist = self.get_neighbours(x, y)
 
-            #r = random.random()
+            r = random.random()
 
             if state == 1:
-                r = random.random()
-                if r < 1 - self.prob:
-                    self.grid_array[x][y] = 0
-                r = random.random()
+
                 if r < self.prob:
-                    update = np.random.choice([0,1,2,3])
-                    self.grid_array[neighlist[update]] = 1
+                    xnew = np.random.choice(xlist)
+                    ynew = np.random.choice(ylist)
+                    self.grid_array[xnew,ynew] = 1
+
+                else:
+                    self.grid_array[x][y] = 0
 
     def get_neighbours(self, x, y):
-        temp = []
+        tempx = []
+        tempy = []
         ran = [1,-1]
         for n in ran:
 
             x_edge = (x+n+self.rows) % self.rows
-            temp.append([x_edge,y])
+            tempx.append(x_edge)
 
             y_edge = (y+n+self.columns) % self.columns
-            temp.append([x,y_edge])
-
-        return temp
+            tempy.append(y_edge)
+        tempx.append(x)
+        tempy.append(y)
+        return tempx,tempy
 
     def update_grid(self):
         for _ in range(self.rows **2):

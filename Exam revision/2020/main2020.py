@@ -6,17 +6,22 @@ import pandas as pd
 import numpy as np
 
 N = 50
-P = 0.7
+P = 0.6
 nsteps = 5000
 
 
 grid = Grid(N,P)
 grid.create_random_grid()
 
+nlist = np.arange(0,nsteps,1)
+total = []
+
 for i in range(nsteps):
     grid.SIRS()
-    if i % 10 == 0:
-        plt.cla()
-        im = plt.imshow(grid.grid_array, animated=True)
-        plt.draw()
-        plt.pause(0.00001)
+    total.append(np.sum(grid.grid_array)/N**2)
+
+    if i % 1000 == 0:
+        print(i)
+
+plt.plot(nlist,total)
+plt.show()
