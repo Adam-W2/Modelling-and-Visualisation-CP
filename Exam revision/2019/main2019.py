@@ -5,7 +5,7 @@ from grid2019 import Grid
 import pandas as pd
 import numpy as np
 
-which = "ani"
+which = "an"
 if which == "ani":
 
     N = 100
@@ -28,8 +28,8 @@ else:
 
     N = 50
     dx = 1
-    dt = 0.40
-    nsteps = 10000
+    dt = 0.01
+    nsteps = 100000
     F = np.arange(0.020,0.055,0.005)
     variance = []
     for k in F:
@@ -39,8 +39,12 @@ else:
         grid.create_V_grid()
         for i in range(nsteps):
             grid.steps()
-            temp_var.append(np.mean(grid.grid_U**2) - np.mean(grid.grid_U)**2)
-        variance.append(np.mean(temp_var))
+            #temp_var.append(np.mean(grid.grid_U**2) - np.mean(grid.grid_U)**2)
+
+        #variance.append(np.mean(temp_var))
+        variance.append(np.mean(grid.grid_U**2) - np.mean(grid.grid_U)**2)
+        #plt.plot(np.linspace(0,100000,100000),temp_var)
+        #plt.show()
         print(f"Done F = {k}")
 
     df = pd.DataFrame({"F list":F,"Variance":variance})

@@ -9,8 +9,8 @@ import numpy as np
 
 N = 50
 dx = 1
-dt = 0.21
-nsteps = 15000
+dt = 0.02
+nsteps = 100000
 phi_zero = 0.5
 
 
@@ -20,14 +20,14 @@ dt = float(dt)
 nsteps = int(nsteps)
 phi_zero = float(phi_zero)
 
-which = "or"
+which = "ori"
 if which == "ori":
 
-    grid = Grid(dx,dt,phi_zero,N)
+    grid = Grid(dx,dt,phi_zero,N,0)
     grid.create_phi_grid()
     grid.create_M_grid()
 
-    animate = grid.grid_phi
+    animate = grid.grid_M
 
     Mmean = []
     phimean = []
@@ -35,9 +35,9 @@ if which == "ori":
 
     for i in range(nsteps):
         grid.steps()
-        if i % 10 == 0:
+        if i % 50 == 0:
             Mmean.append(np.mean(grid.grid_M))
-            print(np.mean(grid.grid_phi))
+
             phimean.append(np.mean(grid.grid_phi))
             nlist.append(i)
             plt.cla()

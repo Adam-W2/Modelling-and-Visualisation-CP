@@ -12,7 +12,7 @@ class Grid:
         self.grid_M = np.zeros((self.rows,self.columns))
         self.M = 0.1
         self.a = 0.1
-        self.X = 0.3
+        self.X = 0
         self.K = 0.1
         self.D = 1
         self.c = 0.1
