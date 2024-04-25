@@ -16,6 +16,11 @@ class Grid:
         self.grid_array = np.random.choice([1,0], size=(self.rows, self.columns), p=[1/2,1/2])
         return self.grid_array
 
+    def create_one_grid(self):
+        x = random.randint(0, self.columns - 1)
+        y = random.randint(0, self.rows - 1)
+        self.grid_array[x][y] = 1
+
     def SIRS(self):
         for i in range(self.rows**2):
             x = random.randint(0,self.columns-1)
@@ -51,18 +56,28 @@ class Grid:
         tempy.append(y)
         return tempx,tempy
 
-    def update_grid(self):
-        for _ in range(self.rows **2):
-            self.SIRS()
+    def jacknife(self,L):
 
-    def animation(self,nsteps):
-        for n in range(nsteps):
+        n = len(L)
+        jacknife_estimate = np.zeros(n)
 
-            self.update_grid()
-            if n % 5 == 0:
-                # show animation
-                plt.cla()
-                im = plt.imshow(self.grid_array, animated=True, vmin=-1, vmax=2)
+        # Loop over length of input list
+        for i in range(n):
+            # Create new list and remove ith component
+            sample = np.delete(L, i)
 
-                plt.draw()
-                plt.pause(0.00001)
+            # Create squared version list and calculate specific heat, appending to masterlist
+            sample2 = np.square(sample)
+
+            samplemean = sample.mean()
+            sample2mean = sample2.mean()
+            jacknife_estimate[i] = (sample2mean - samplemean**2)/self.rows**2
+
+        # Create squared specific heat list and calcuate averages
+        jacknife_estimate2 = np.square(jacknife_estimate)
+        c = jacknife_estimate.mean()
+        c2 = jacknife_estimate2.mean()
+
+        # Calculate errors
+        error = np.sqrt(c2 - c ** 2) * np.sqrt(len(L))
+        return error
