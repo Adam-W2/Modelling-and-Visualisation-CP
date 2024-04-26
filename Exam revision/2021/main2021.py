@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 from grid2021 import Grid
 import pandas as pd
 import numpy as np
+from scipy.signal import find_peaks
 
 
 #N,dx,dt,nsteps,phi_zero = input("Please input N, dx, dt number of steps and phi zero: ").split(" ")
@@ -11,7 +12,7 @@ import numpy as np
 N = 50
 dx = 1
 dt = 0.1
-nsteps = 5000
+nsteps = 10000
 
 
 N = int(N)
@@ -84,7 +85,7 @@ elif which == "sims":
     error = std/np.sqrt(n)
     print(f"average absorption: {mean} +/- {error}")
 
-else:
+elif which == "peaks":
     grid = Grid(dx,dt,N)
     grid.create_random_grid(grid.grid_a)
     grid.create_random_grid(grid.grid_b)
@@ -102,25 +103,44 @@ else:
         a2list.append(grid.grid_a[int(N/3),int(N/2)])
         nlist.append(i)
 
+    peaks1, _ = find_peaks(a1list[1000:])
+    peaks2, _ = find_peaks(a2list[1000:])
 
-    def find_period(data):
-        # Find the peaks in the data
-        peak_indices = np.where((data[:-1] > data[1:]) & (data[:-1] > data[1:]))[0] + 1
+    peaks1_dis = np.diff(peaks1)
+    peaks2_dis = np.diff(peaks2)
 
-        # Calculate the distances between consecutive peaks
-        peak_distances = np.diff(peak_indices)
+    period1 = np.mean(peaks1_dis)
+    period2 = np.mean(peaks2_dis)
 
-        # Calculate the average distance between peaks
-        average_period = np.mean(peak_distances)
-
-        return average_period
-
-    period1 = find_period(a1list[1000:])
-    period2 = find_period(a2list[1000:])
     print(period1)
     print(period2)
 
     plt.plot(nlist,a1list,label = "A1")
     plt.plot(nlist,a2list,label = "A2")
     plt.legend()
+    plt.show()
+
+else:
+    rlist = np.arange(1,25,1)
+    problist = []
+    for r in rlist:
+        temp = []
+        for j in range(10):
+            grid = Grid(dx,dt,N)
+            grid.create_random_grid(grid.grid_a)
+            grid.create_random_grid(grid.grid_b)
+            grid.create_random_grid(grid.grid_c)
+            prob = 0
+            for i in range(nsteps):
+                grid.steps()
+                grid.update_t()
+                coord1 = grid.grid_t[int(N/2),int(N/2)]
+                coord2 = grid.grid_t[int(N/2 + r),int(N/2)]
+                if coord1 == coord2:
+                    prob += 1
+            temp.append(prob/nsteps)
+        problist.append(np.mean(temp))
+        print(f"Distance {r} done...")
+
+    plt.plot(rlist,problist)
     plt.show()
